@@ -126,6 +126,9 @@ later(function()
             "github:nvim-java/mason-registry",
             "github:mason-org/mason-registry",
         },
+        ui = {
+            border = "rounded",
+        },
     })
 
     require("mason-tool-installer").setup({
