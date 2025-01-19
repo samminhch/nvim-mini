@@ -164,7 +164,39 @@ now(function()
 
     keymaps = utils.merge_arrays(keymaps, mappings)
 end)
-later(function() require("mini.pick").setup() end)
+later(function()
+    require("mini.pick").setup({
+        window = {
+            config = {
+                border = "rounded",
+            },
+            prompt_prefix = "󰛿 ",
+        },
+    })
+
+    vim.ui.select = function(items, opts, on_choice)
+        local get_cursor_anchor = function() return vim.fn.screenrow() < 0.5 * vim.o.lines and "NW" or "SW" end
+        -- Auto-adjust width
+        local num_items = #items
+        local max_height = math.floor(0.45 * vim.o.columns)
+        local height = math.min(math.max(num_items, 1), max_height)
+        local start_opts = {
+            options = { content_from_bottom = get_cursor_anchor() == "SW" },
+            window = {
+                config = {
+                    relative = "cursor",
+                    anchor = get_cursor_anchor(),
+                    row = get_cursor_anchor() == "NW" and 1 or 0,
+                    col = 0,
+                    width = math.floor(0.618 * vim.o.columns),
+                    height = height,
+                },
+            },
+        }
+
+        return MiniPick.ui_select(items, opts, on_choice, start_opts)
+    end
+end)
 
 -- ╒═══════════════════╕
 -- │ `blink.cmp` Setup │
