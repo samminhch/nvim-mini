@@ -222,6 +222,7 @@ later(function()
         end,
     })
 
+    require("mason-lspconfig").setup()
     local lspconfig = require("lspconfig")
 
     -- Setup lazydev before configuring LSPs
