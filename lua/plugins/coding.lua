@@ -82,73 +82,12 @@ now(function()
     keymaps = utils.merge_arrays(keymaps, mappings)
 end)
 
--- ╒═══════════════════════════════════════════╕
--- │ Installing Packages for Text/Code Editing │
--- ╘═══════════════════════════════════════════╛
--- Pre-configuring language servers & Debuggers
-
--- Check out `nvim-lspaconfig`'s documentation
--- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
-local servers = {
-    bashls = {},
-    clangd = {},
-    docker_compose_language_service = {},
-    dockerls = {},
-    hyprls = {},
-    jdtls = {},
-    pyright = {},
-    lua_ls = {
-        Lua = {
-            format = { enable = false },
-        },
-    },
-    marksman = {},
-    rust_analyzer = {},
-    tinymist = {},
-}
-local debuggers = {}
-local formatters = vim.tbl_keys(require("plugins.editing").formatters)
-
--- A string[] of packages to install
-local packages = utils.merge_arrays(vim.tbl_keys(servers), formatters, vim.tbl_keys(debuggers))
-local ignore_packages = { "rustfmt" } -- Don't install these packages
-
-for idx = 1, #packages do
-    if vim.tbl_contains(ignore_packages, packages[idx]) then
-        table.remove(packages, idx)
-    end
-end
-
-later(function()
-    -- Install mason packages
-    require("mason").setup({
-        registries = {
-            "github:nvim-java/mason-registry",
-            "github:mason-org/mason-registry",
-        },
-        ui = {
-            border = "rounded",
-        },
-    })
-
-    require("mason-tool-installer").setup({
-        ensure_installed = packages,
-        auto_update = true,
-        run_on_start = true,
-    })
-
-    vim.api.nvim_create_autocmd("User", {
-        pattern = "MasonToolsStartingInstall",
-        callback = function()
-            vim.schedule(function() vim.print("mason-tool-installer is starting") end)
-        end,
-    })
-end)
-
 -- ╒═══════════╕
 -- │ LSP Setup │
 -- ╘═══════════╛
-later(function()
+local servers = require("plugins.mason").servers
+
+now(function()
     -- Aesthetics
     ---- Define Border Style
     local border_opts = { border = "rounded" }
@@ -222,7 +161,6 @@ later(function()
         end,
     })
 
-    require("mason-lspconfig").setup()
     local lspconfig = require("lspconfig")
 
     -- Setup lazydev before configuring LSPs
@@ -235,32 +173,30 @@ later(function()
         },
     })
 
-    ---@diagnostic disable-next-line: missing-fields
-    require("mason-lspconfig").setup({
-        handlers = {
-            function(server_name)
-                local opts = servers[server_name] or {}
-                opts.capabilities = require("blink.cmp").get_lsp_capabilities(
-                    (servers[server_name] and servers[server_name].capabilities) or {}
-                )
+    require("mason-lspconfig").setup_handlers({
+        function(server_name)
+            local opts = servers[server_name] or {}
+            opts.capabilities = require("blink.cmp").get_lsp_capabilities(
+                (servers[server_name] and servers[server_name].capabilities) or {}
+            )
 
-                lspconfig[server_name].setup(opts)
-            end,
-            clangd = function()
-                require("clangd_extensions.inlay_hints").setup_autocmd()
-                require("clangd_extensions.inlay_hints").set_inlay_hints()
-                lspconfig.clangd.setup(servers.clangd)
-            end,
-            hyprls = function() lspconfig.hyprls.setup(require("blink.cmp").get_lsp_capabilities({})) end,
-            jdtls = function()
-                require("java").setup({
-                    -- custom jdtls settings here
-                })
+            lspconfig[server_name].setup(opts)
+        end,
+        clangd = function()
+            require("clangd_extensions.inlay_hints").setup_autocmd()
+            require("clangd_extensions.inlay_hints").set_inlay_hints()
+            lspconfig.clangd.setup(servers.clangd)
+        end,
+        hyprls = function() lspconfig.hyprls.setup(require("blink.cmp").get_lsp_capabilities({})) end,
+        jdtls = function()
+            require("java").setup({
+                -- custom jdtls settings here
+            })
 
-                -- servers.jdtls should contain nvim-java settings
-                lspconfig.jdtls.setup(servers.jdtls)
-            end,
-        },
+            -- servers.jdtls should contain nvim-java settings
+            lspconfig.jdtls.setup(servers.jdtls)
+        end,
+        tinymist = function() lspconfig.tinymist.setup(require("blink.cmp").get_lsp_capabilities({})) end,
     })
 end)
 

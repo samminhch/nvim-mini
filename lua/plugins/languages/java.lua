@@ -13,6 +13,7 @@ now(
                 "MunifTanjim/nui.nvim",
                 "mfussenegger/nvim-dap",
                 "JavaHello/spring-boot.nvim",
+                "neovim/nvim-lspconfig",
             },
         })
     end

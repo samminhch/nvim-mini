@@ -310,26 +310,7 @@ later(
 -- │ `conform.nvim` setup │
 -- ╘══════════════════════╛
 local shiftwidth = vim.api.nvim_get_option_value("shiftwidth", {})
-local formatters = {
-    black = {},
-    isort = {},
-    prettierd = {
-        env = {
-            PRETTIERD_DEFAULT_CONFIG = vim.fn.stdpath("config") .. "/.prettierrc.json",
-        },
-    },
-    rustfmt = {},
-    shfmt = {
-        prepend_args = { "-i", shiftwidth },
-    },
-    stylua = {
-        prepend_args = {
-            "--config-path",
-            vim.fn.stdpath("config") .. "/.stylua.toml",
-        },
-    },
-}
-
+local formatters = require("plugins.mason").formatters
 later(function()
     require("conform").setup({
         formatters_by_ft = {
@@ -358,4 +339,4 @@ later(function()
 end)
 
 -- Return the list of formatters to be installed with `mason.nvim`
-return { formatters = formatters, keymaps = keymaps }
+return { keymaps = keymaps }
