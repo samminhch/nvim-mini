@@ -4,6 +4,30 @@ local utils = require("utils.base")
 -- ╒═══════════════════════════════════════════╕
 -- │ Installing Packages for Text/Code Editing │
 -- ╘═══════════════════════════════════════════╛
+
+-- Installing Mason + Friends
+now(function()
+    add({
+        source = "WhoIsSethDaniel/mason-tool-installer.nvim",
+        depends = {
+            "williamboman/mason.nvim",
+            "williamboman/mason-lspconfig.nvim",
+            "jay-babu/mason-nvim-dap.nvim",
+        },
+    })
+
+    -- Install mason packages
+    require("mason").setup({
+        registries = {
+            "github:nvim-java/mason-registry",
+            "github:mason-org/mason-registry",
+        },
+        ui = {
+            border = "rounded",
+        },
+    })
+end)
+
 -- Pre-configuring language servers & Debuggers
 
 local servers = {
@@ -24,7 +48,6 @@ local servers = {
     tinymist = {},
 }
 
-local debuggers = {}
 local formatters = {
     black = {},
     isort = {},
@@ -46,7 +69,7 @@ local formatters = {
 }
 
 -- A string[] of packages to install
-local packages = utils.merge_arrays(vim.tbl_keys(servers), vim.tbl_keys(formatters), vim.tbl_keys(debuggers))
+local packages = utils.merge_arrays(vim.tbl_keys(servers), vim.tbl_keys(formatters))
 local ignore_packages = { "rustfmt" } -- Don't install these packages
 
 for idx = 1, #packages do
@@ -56,27 +79,6 @@ for idx = 1, #packages do
 end
 
 now(function()
-    add({
-        source = "WhoIsSethDaniel/mason-tool-installer.nvim",
-        depends = {
-            "williamboman/mason.nvim",
-            "williamboman/mason-lspconfig.nvim",
-            "WhoIsSethDaniel/mason-tool-installer.nvim",
-            "jay-babu/mason-nvim-dap.nvim",
-        },
-    })
-
-    -- Install mason packages
-    require("mason").setup({
-        registries = {
-            "github:nvim-java/mason-registry",
-            "github:mason-org/mason-registry",
-        },
-        ui = {
-            border = "rounded",
-        },
-    })
-
     require("mason-tool-installer").setup({
         ensure_installed = packages,
         auto_update = true,
@@ -89,7 +91,6 @@ now(function()
             vim.schedule(function() vim.notify("Mason is installing packages", vim.log.levels.INFO, nil) end)
         end,
     })
-    require("mason-lspconfig").setup()
 end)
 
-return { servers = servers, formatters = formatters, debuggers = debuggers }
+return { servers = servers, formatters = formatters, debuggers = adapters }

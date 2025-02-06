@@ -9,12 +9,9 @@ local keymaps = {}
 -- ╘════════════════════════════════════════════╛
 now(function()
     add({
-        source = "neovim/nvim-lspconfig",
+        source = "williamboman/mason-lspconfig.nvim",
         depends = {
-            -- Installing LSPs
-            "williamboman/mason.nvim",
-            "williamboman/mason-lspconfig.nvim",
-            "WhoIsSethDaniel/mason-tool-installer.nvim",
+            "neovim/nvim-lspconfig",
             -- NeoVIM dev tools
             "folke/lazydev.nvim",
         },
@@ -88,21 +85,6 @@ end)
 local servers = require("plugins.mason").servers
 
 now(function()
-    -- Aesthetics
-    ---- Define Border Style
-    local border_opts = { border = "rounded" }
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, border_opts)
-    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, border_opts)
-    vim.diagnostic.config({ float = border_opts })
-
-    ---- Set Diagnostic Icons
-    local icons = { Error = "", Warn = "", Hint = "󰌵", Info = "" }
-
-    for type, icon in pairs(icons) do
-        local highlight = "DiagnosticSign" .. type
-        vim.fn.sign_define(highlight, { text = icon, texthl = highlight, numhl = highlight })
-    end
-
     -- Setting default keybinds & features when attaching a language server
     vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
@@ -173,57 +155,46 @@ now(function()
         },
     })
 
-    require("mason-lspconfig").setup_handlers({
-        function(server_name)
-            local opts = servers[server_name] or {}
-            opts.capabilities = require("blink.cmp").get_lsp_capabilities(
-                (servers[server_name] and servers[server_name].capabilities) or {}
-            )
+    ---@diagnostic disable-next-line: missing-fields
+    require("mason-lspconfig").setup({
+        handlers = {
+            function(server_name)
+                local opts = servers[server_name] or {}
+                opts.capabilities = require("blink.cmp").get_lsp_capabilities(
+                    (servers[server_name] and servers[server_name].capabilities) or {}
+                )
 
-            lspconfig[server_name].setup(opts)
-        end,
-        clangd = function()
-            require("clangd_extensions.inlay_hints").setup_autocmd()
-            require("clangd_extensions.inlay_hints").set_inlay_hints()
-            lspconfig.clangd.setup(servers.clangd)
-        end,
-        hyprls = function() lspconfig.hyprls.setup(require("blink.cmp").get_lsp_capabilities({})) end,
-        jdtls = function()
-            require("java").setup({
-                -- custom jdtls settings here
-            })
+                lspconfig[server_name].setup(opts)
+            end,
+            hyprls = function() lspconfig.hyprls.setup(require("blink.cmp").get_lsp_capabilities({})) end,
+            jdtls = function()
+                require("java").setup({
+                    -- custom jdtls settings here
+                })
 
-            -- servers.jdtls should contain nvim-java settings
-            lspconfig.jdtls.setup(servers.jdtls)
-        end,
-        tinymist = function() lspconfig.tinymist.setup(require("blink.cmp").get_lsp_capabilities({})) end,
+                -- servers.jdtls should contain nvim-java settings
+                lspconfig.jdtls.setup(servers.jdtls)
+            end,
+            tinymist = function() lspconfig.tinymist.setup(require("blink.cmp").get_lsp_capabilities({})) end,
+        },
     })
 end)
 
--- ╒═════════════════╕
--- │ Debugging Setup │
--- ╘═════════════════╛
-
 later(function()
-    local dap = require("dap")
-    local dapui = require("dapui")
+    -- Aesthetics
+    ---- Define Border Style
+    local border_opts = { border = "rounded" }
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, border_opts)
+    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, border_opts)
+    vim.diagnostic.config({ float = border_opts })
 
-    ---@diagnostic disable-next-line: missing-fields
-    dapui.setup({
-        icons = { expanded = "", collapsed = "", current_frame = " " },
-    })
+    ---- Set Diagnostic Icons
+    local icons = { Error = "", Warn = "", Hint = "󰌵", Info = "" }
 
-    dap.listeners.after.event_initialized["dapui_config"] = dapui.open
-    dap.listeners.before.event_terminated["dapui_config"] = dapui.close
-    dap.listeners.before.event_exited["dapui_config"] = dapui.close
-
-    -- Set Debug Icons
-    -- local icons = { Error = "", Warn = "", Hint = "󰌵", Info = "" }
-    --
-    -- for type, icon in pairs(icons) do
-    --     local highlight = "DiagnosticSign" .. type
-    --     vim.fn.sign_define(highlight, { text = icon, texthl = highlight, numhl = highlight })
-    -- end
+    for type, icon in pairs(icons) do
+        local highlight = "DiagnosticSign" .. type
+        vim.fn.sign_define(highlight, { text = icon, texthl = highlight, numhl = highlight })
+    end
 end)
 
 return { keymaps = keymaps }
