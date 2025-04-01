@@ -30,17 +30,104 @@ end)
 
 -- Pre-configuring language servers & Debuggers
 
+---@type table<string, vim.lsp.Config>
 local servers = {
-    bashls = {},
-    clangd = {},
+    basedpyright = {
+        cmd = { "basedpyright-langserver", "--stdio" },
+        filetypes = { "python" },
+        root_markers = {
+            "pyproject.toml",
+            "setup.py",
+            "setup.cfg",
+            "requirements.txt",
+            "Pipfile",
+            "pyrightconfig.json",
+            ".git",
+        },
+        settings = {
+            basedpyright = {
+                analysis = {
+                    autoSearchPaths = true,
+                    useLibraryCodeForTypes = true,
+                    diagnosticMode = "openFilesOnly",
+                },
+            },
+        },
+    },
+    bashls = {
+        cmd = { "bash-language-server", "start" },
+        filetypes = { "bash", "sh" },
+        root_dir = function(fname) return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1]) end,
+        settings = {
+            bashIde = {
+                globPattern = "*@(.sh|.inc|.bash|.command)",
+            },
+        },
+    },
+    clangd = {
+        cmd = { "clangd", "--background-index" },
+        filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+        root_markers = {
+            ".clangd",
+            ".clang-tidy",
+            ".clang-format",
+            "compile_commands.json",
+            "compile_flags.txt",
+            "configure.ac",
+        },
+        flags = {
+            debounce_text_changes = 20,
+            exit_timeout = false,
+        },
+        capabilities = {
+            textDocument = {
+                completion = { editsNearCursor = true },
+                offsetEncoding = { "utf-8", "utf-16" },
+            },
+        },
+    },
     docker_compose_language_service = {},
     dockerls = {},
-    hyprls = {},
-    jdtls = {},
-    pyright = {},
+    html = {
+        cmd = { "vscode-html-language-server", "--stdio" },
+        filetypes = { "html", "templ" },
+        init_options = {
+            configurationSection = { "html", "css", "javascript" },
+            embeddedLanguages = {
+                css = true,
+                javascript = true,
+            },
+            provideFormatter = true,
+        },
+        root_markers = { "package.json", ".git" },
+    },
+    hyprls = {
+        cmd = { "hyprls", "--stdio" },
+        filetypes = { "hyprlang" },
+        root_dir = function(fname) return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1]) end,
+    },
+    jdtls = { ignore_config = true },
     lua_ls = {
-        Lua = {
-            format = { enable = false },
+        before = function()
+            -- Setup lazydev before configuring LSPs
+            ---@diagnostic disable-next-line: missing-fields
+            require("lazydev").setup({
+                library = {
+                    { path = "luvit-meta/library", words = { "vim%.uv" } },
+                },
+            })
+        end,
+        cmd = { "lua-language-server" },
+        filetypes = { "lua" },
+        root_markers = {
+            ".luarc.json",
+            ".luarc.jsonc",
+            ".luacheckrc",
+            ".stylua.toml",
+            "stylua.toml",
+            "selene.toml",
+            "selene.yml",
+            ".git",
         },
     },
     marksman = {},
@@ -50,6 +137,7 @@ local servers = {
 
 local formatters = {
     black = {},
+    ["clang-format"] = {},
     isort = {},
     prettierd = {
         env = {
@@ -58,7 +146,7 @@ local formatters = {
     },
     rustfmt = {},
     shfmt = {
-        prepend_args = { "-i", shiftwidth },
+        prepend_args = { "-i", vim.o.shiftwidth },
     },
     stylua = {
         prepend_args = {

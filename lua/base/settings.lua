@@ -13,6 +13,7 @@ require("mini.deps").now(function()
     vim.opt.pumheight = 10 -- Limit popup menu height
     vim.opt.conceallevel = 2 -- Hide special characters like bold/italic markup
     vim.opt.splitkeep = "screen" -- Preserve layout during splits
+    vim.opt.winborder = "rounded"
 
     -- ╒══════════════════════════╕
     -- │Indentations / Formatting │
