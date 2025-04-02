@@ -57,7 +57,6 @@ local servers = {
     bashls = {
         cmd = { "bash-language-server", "start" },
         filetypes = { "bash", "sh" },
-        root_dir = function(fname) return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1]) end,
         settings = {
             bashIde = {
                 globPattern = "*@(.sh|.inc|.bash|.command)",
@@ -86,8 +85,24 @@ local servers = {
             },
         },
     },
-    docker_compose_language_service = {},
-    dockerls = {},
+    cssls = {
+        cmd = { "vscode-css-language-server", "--stdio" },
+        filetypes = { "css", "scss", "less" },
+        root_markers = { "package.json", ".git" },
+        settings = {
+            css = {
+                validate = true,
+            },
+            less = {
+                validate = true,
+            },
+            scss = {
+                validate = true,
+            },
+        },
+    },
+    docker_compose_language_service = { ignore_config = true },
+    dockerls = { ignore_config = true },
     html = {
         cmd = { "vscode-html-language-server", "--stdio" },
         filetypes = { "html", "templ" },
@@ -130,9 +145,9 @@ local servers = {
             ".git",
         },
     },
-    marksman = {},
-    rust_analyzer = {},
-    tinymist = {},
+    marksman = { ignore_config = true },
+    rust_analyzer = { ignore_config = true },
+    tinymist = { ignore_config = true },
 }
 
 local formatters = {
