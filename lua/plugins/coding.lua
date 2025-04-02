@@ -114,9 +114,9 @@ require("mini.deps").later(function()
 
         if not config.ignore_config then
             vim.lsp.config[server] = config
+            vim.lsp.enable(server)
         end
     end
-    vim.lsp.enable(vim.tbl_keys(servers))
 end)
 
 return { keymaps = keymaps }
