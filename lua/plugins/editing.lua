@@ -23,20 +23,6 @@ end)
 
 now(function()
     add({
-        source = "saghen/blink.cmp",
-        depends = {
-            -- Snippets
-            "rafamadriz/friendly-snippets",
-            -- Sources
-            "moyiz/blink-emoji.nvim",
-            "Saghen/blink.compat",
-        },
-        checkout = "v0.10.0", -- check releases for latest tag
-    })
-end)
-
-now(function()
-    add({
         source = "stevearc/conform.nvim",
         checkout = "v8.3.0",
     })
@@ -81,15 +67,31 @@ now(function()
     keymaps = utils.merge_arrays(keymaps, mappings)
 end)
 
+now(function() add({ source = "rafamadriz/friendly-snippets" }) end)
+
 -- ╒═════════════════════════════════════╕
 -- │ Setup `mini.nvim` Plugins + Keymaps │
 -- ╘═════════════════════════════════════╛
 later(function() require("mini.align").setup() end)
 later(function() require("mini.bracketed").setup() end)
+later(function() require("mini.completion").setup() end)
 later(function() require("mini.diff").setup() end)
 later(function() require("mini.extra").setup() end)
 later(function() require("mini.git").setup() end)
 later(function() require("mini.pairs").setup() end)
+later(function()
+    local gen_loader = require("mini.snippets").gen_loader
+    require("mini.snippets").setup({
+        snippets = {
+            -- Load custom file with global snippets first (adjust for Windows)
+            gen_loader.from_file("~/.config/nvim/snippets/global.json"),
+
+            -- Load snippets based on current language by reading files from
+            -- "snippets/" subdirectories from 'runtimepath' directories.
+            gen_loader.from_lang(),
+        },
+    })
+end)
 later(function() require("mini.surround").setup() end)
 later(function() require("mini.visits").setup() end)
 
@@ -167,9 +169,6 @@ end)
 later(function()
     require("mini.pick").setup({
         window = {
-            config = {
-                border = "rounded",
-            },
             prompt_prefix = "󰛿 ",
         },
     })
@@ -196,67 +195,6 @@ later(function()
 
         return MiniPick.ui_select(items, opts, on_choice, start_opts)
     end
-end)
-
--- ╒═══════════════════╕
--- │ `blink.cmp` Setup │
--- ╘═══════════════════╛
-later(function()
-    require("blink.cmp").setup({
-        completion = {
-            menu = {
-                border = "rounded",
-            },
-            documentation = {
-                auto_show = true,
-                window = {
-                    border = "rounded",
-                },
-            },
-            ghost_text = { enabled = true },
-        },
-        signature = {
-            enabled = true,
-            window = {
-                border = "rounded",
-            },
-        },
-        sources = {
-            default = {
-                "lazydev",
-                "lsp",
-                "path",
-                "snippets",
-                "markdown",
-                "crates",
-                "buffer",
-                "emoji",
-            },
-            providers = {
-                crates = {
-                    name = "crates",
-                    module = "blink.compat.source",
-                },
-                emoji = {
-                    module = "blink-emoji",
-                    name = "Emoji",
-                    score_offset = 15, -- Tune by preference
-                    opts = { insert = true }, -- Insert emoji (default) or complete its name
-                },
-                lazydev = {
-                    name = "LazyDev",
-                    module = "lazydev.integrations.blink",
-                    -- make lazydev completions top priority (see `:h blink.cmp`)
-                    score_offset = 100,
-                },
-                markdown = {
-                    name = "RenderMarkdown",
-                    module = "render-markdown.integ.blink",
-                    fallbacks = { "lsp" },
-                },
-            },
-        },
-    })
 end)
 
 -- ╒═════════════════════════╕
@@ -314,6 +252,11 @@ local formatters = require("plugins.mason").formatters
 later(function()
     require("conform").setup({
         formatters_by_ft = {
+            arduino = { "clang_format" },
+            c = { "clang_format" },
+            cpp = { "clang_format" },
+            css = { "prettierd" },
+            html = { "prettierd" },
             json = { "prettierd" },
             lua = { "stylua" },
             markdown = { "prettierd" },

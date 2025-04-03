@@ -14,7 +14,7 @@
 -- Clone `mini.nvim` manually in a way that it gets managed by `mini.deps`
 local path_package = vim.fn.stdpath("data") .. "/site/"
 local mini_path = path_package .. "pack/deps/start/mini.nvim"
-if not vim.loop.fs_stat(mini_path) then
+if not vim.uv.fs_stat(mini_path) then
     vim.cmd('echo "Installing `mini.nvim`" | redraw')
     local clone_cmd = {
         "git",
@@ -31,20 +31,18 @@ end
 -- Set up `mini.deps` (customize to your liking)
 require("mini.deps").setup({ path = { package = path_package } })
 
--- ╒══════════════════════════════════╕
--- │Include nvim Settings and Bindings│
--- ╘══════════════════════════════════╛
+-- ╒═════════════════╕
+-- │Custom filetypes │
+-- ╘═════════════════╛
 -- Make a hyprlang filetype
 vim.filetype.add({
     pattern = { [".*/hypr.*%.conf"] = "hyprlang" },
     callback = function(event) vim.bo[event.buf].commentstring = "# %s" end,
 })
+
+-- ╒═══════════════════════════════════╕
+-- │Load the rest of the configuration │
+-- ╘═══════════════════════════════════╛
 require("base.settings")
 require("base.bindings")
-
--- ╒══════════════════════╕
--- │Load all Plugin Files │
--- ╘══════════════════════╛
-
--- Set up colorscheme first
 require("plugins")

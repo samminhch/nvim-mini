@@ -1,4 +1,4 @@
-local now, later, add = MiniDeps.now, MiniDeps.later, MiniDeps.add
+local now, add = MiniDeps.now, MiniDeps.add
 
 now(function() add({ source = "stevearc/dressing.nvim" }) end)
 
@@ -6,7 +6,7 @@ now(function() add({ source = "stevearc/dressing.nvim" }) end)
 -- │ Setting Colorscheme │
 -- ╘═════════════════════╛
 now(function()
-    MiniDeps.add({ source = "sainnhe/everforest" })
+    add({ source = "sainnhe/everforest" })
     vim.cmd.colorscheme("everforest")
 end)
 
@@ -40,6 +40,16 @@ now(function()
             {
                 action = "e $MYVIMRC | :cd %:p:h | pwd",
                 name = "Settings",
+                section = " eoVIM Actions",
+            },
+            {
+                action = "Mason",
+                name = "Mason",
+                section = " eoVIM Actions",
+            },
+            {
+                action = "lua MiniDeps.update()",
+                name = "Update Plugins",
                 section = " eoVIM Actions",
             },
             {

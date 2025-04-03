@@ -1,8 +1,6 @@
-local now, later, add = MiniDeps.now, MiniDeps.later, MiniDeps.add
-
-now(
+MiniDeps.now(
     function()
-        add({
+        MiniDeps.add({
             source = "MeanderingProgrammer/render-markdown.nvim",
             depends = {
                 "nvim-treesitter/nvim-treesitter",
@@ -12,4 +10,4 @@ now(
     end
 )
 
-later(function() require("render-markdown").setup() end)
+MiniDeps.later(function() require("render-markdown").setup() end)
