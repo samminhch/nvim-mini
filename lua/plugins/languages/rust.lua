@@ -1,12 +1,6 @@
-local now, later, add = MiniDeps.now, MiniDeps.later, MiniDeps.add
+MiniDeps.now(function() MiniDeps.add({ source = "saecki/crates.nvim" }) end)
 
-now(function()
-    add({
-        source = "saecki/crates.nvim",
-    })
-end)
-
-later(function()
+MiniDeps.later(function()
     require("crates").setup({
         popup = {
             border = "rounded",

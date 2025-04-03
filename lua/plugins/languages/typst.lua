@@ -1,7 +1,5 @@
-local now, later, add = MiniDeps.now, MiniDeps.later, MiniDeps.add
-
-now(function()
-    add({
+MiniDeps.now(function()
+    MiniDeps.add({
         source = "chomosuke/typst-preview.nvim",
         version = "v1.2.2",
         hooks = {
@@ -10,7 +8,7 @@ now(function()
     })
 end)
 
-later(
+MiniDeps.later(
     function()
         require("typst-preview").setup({
             dependencies_bin = {
