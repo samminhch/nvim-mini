@@ -67,6 +67,8 @@ now(function()
     keymaps = utils.merge_arrays(keymaps, mappings)
 end)
 
+now(function() add({ source = "rafamadriz/friendly-snippets" }) end)
+
 -- ╒═════════════════════════════════════╕
 -- │ Setup `mini.nvim` Plugins + Keymaps │
 -- ╘═════════════════════════════════════╛
@@ -77,6 +79,19 @@ later(function() require("mini.diff").setup() end)
 later(function() require("mini.extra").setup() end)
 later(function() require("mini.git").setup() end)
 later(function() require("mini.pairs").setup() end)
+later(function()
+    local gen_loader = require("mini.snippets").gen_loader
+    require("mini.snippets").setup({
+        snippets = {
+            -- Load custom file with global snippets first (adjust for Windows)
+            gen_loader.from_file("~/.config/nvim/snippets/global.json"),
+
+            -- Load snippets based on current language by reading files from
+            -- "snippets/" subdirectories from 'runtimepath' directories.
+            gen_loader.from_lang(),
+        },
+    })
+end)
 later(function() require("mini.surround").setup() end)
 later(function() require("mini.visits").setup() end)
 
