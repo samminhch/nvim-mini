@@ -1,4 +1,3 @@
-local now, add = MiniDeps.now, MiniDeps.add
 local utils = require("utils.base")
 
 -- ╒═══════════════════════════════════════════╕
@@ -6,8 +5,8 @@ local utils = require("utils.base")
 -- ╘═══════════════════════════════════════════╛
 
 -- Installing Mason + Friends
-now(function()
-    add({
+MiniDeps.now(function()
+    MiniDeps.add({
         source = "WhoIsSethDaniel/mason-tool-installer.nvim",
         depends = {
             "williamboman/mason.nvim",
@@ -30,7 +29,21 @@ end)
 
 -- Pre-configuring language servers & Debuggers
 
----@type table<string, vim.lsp.Config>
+local env = {
+    sysname = vim.loop.os_uname().sysname,
+    xdg_cache_home = os.getenv("XDG_CACHE_HOME"),
+    nvim = {
+        mason_data = vim.fn.stdpath("data") .. "/mason/share",
+    },
+}
+
+local cache_dir = env.cache_home and env.cache_home or vim.fn.expand("~/.cache")
+local jdtls_exec = env.sysname == "Linux" and "/usr/bin/jdtls" or "jdtls"
+local jdtls_dir = env.sysname == "LINUX" and "/usr/share/java/jdtls" or env.nvim.mason_data .. "jdtls"
+local jdtls_config_dir = jdtls_dir .. (env.sysname == "Linux" and "config_linux/" or "config/")
+local jdtls_workspace_dir = cache_dir .. "/workspace"
+
+---@type function<table<string,vim.lsp.Config>>
 local servers = {
     basedpyright = {
         cmd = { "basedpyright-langserver", "--stdio" },
@@ -119,11 +132,33 @@ local servers = {
     hyprls = {
         cmd = { "hyprls", "--stdio" },
         filetypes = { "hyprlang" },
-        root_dir = function(fname) return vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1]) end,
     },
-    jdtls = { ignore_config = true },
+    jdtls = {
+        cmd = {
+            jdtls_exec,
+            "-configuration",
+            jdtls_config_dir,
+            "-data",
+            jdtls_workspace_dir,
+        },
+        filetypes = { "java" },
+        root_markers = {
+            "build.xml", -- Ant
+            "pom.xml", -- Maven
+            "settings.gradle", -- Gradle
+            "settings.gradle.kts", -- Gradle
+        },
+        init_options = {
+            workspace = jdtls_workspace_dir,
+            jvm_args = {},
+            os_config = nil,
+        },
+    },
     lua_ls = {
-        before = function()
+        before_init = function(
+            params --[[@as lsp.InitializeParams]],
+            config --[[@as vim.lsp.ClientConfig]]
+        )
             -- Setup lazydev before configuring LSPs
             ---@diagnostic disable-next-line: missing-fields
             require("lazydev").setup({
@@ -181,7 +216,7 @@ for idx = 1, #packages do
     end
 end
 
-now(function()
+MiniDeps.now(function()
     require("mason-tool-installer").setup({
         ensure_installed = packages,
         auto_update = true,
@@ -196,4 +231,4 @@ now(function()
     })
 end)
 
-return { servers = servers, formatters = formatters, debuggers = adapters }
+return { servers = servers, formatters = formatters }

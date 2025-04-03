@@ -1,5 +1,4 @@
-local now, add = MiniDeps.now, MiniDeps.add
-local utils = require("utils.base")
+local now = MiniDeps.now
 
 ---@type KeyMap[]
 local keymaps = {}
@@ -82,7 +81,7 @@ end)
 -- ╒═══════════╕
 -- │ LSP Setup │
 -- ╘═══════════╛
-require("mini.deps").later(function()
+now(function()
     -- ╒═════════════╕
     -- │ Diagnostics │
     -- ╘═════════════╛
@@ -108,12 +107,11 @@ require("mini.deps").later(function()
     -- │ Configuring / Enabling LSPs │
     -- ╘═════════════════════════════╛
     for server, config in pairs(servers) do
-        if config.before ~= nil then
-            config.before()
-        end
-
         if not config.ignore_config then
-            vim.lsp.config[server] = config
+            -- if server == "jdtls" then
+            --     vim.print(config)
+            -- end
+            vim.lsp.config[server] = type(config) == "table" and config or config()
             vim.lsp.enable(server)
         end
     end
