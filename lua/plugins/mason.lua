@@ -214,11 +214,10 @@ MiniDeps.now(function()
         run_on_start = true,
     })
 
+    -- Show the Mason UI when installing packages
     vim.api.nvim_create_autocmd("User", {
         pattern = "MasonToolsStartingInstall",
-        callback = function()
-            vim.schedule(function() vim.notify("Mason is installing packages", vim.log.levels.INFO, nil) end)
-        end,
+        callback = function() vim.cmd("Mason") end,
     })
 end)
 
