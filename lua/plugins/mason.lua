@@ -11,20 +11,11 @@ MiniDeps.now(function()
         depends = {
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
-            "jay-babu/mason-nvim-dap.nvim",
         },
     })
 
     -- Install mason packages
-    require("mason").setup({
-        registries = {
-            "github:nvim-java/mason-registry",
-            "github:mason-org/mason-registry",
-        },
-        ui = {
-            border = "rounded",
-        },
-    })
+    require("mason").setup({ ui = { border = "rounded" } })
 end)
 
 -- Pre-configuring language servers & Debuggers
@@ -69,7 +60,7 @@ local servers = {
     },
     bashls = {
         cmd = { "bash-language-server", "start" },
-        filetypes = { "bash", "sh" },
+        filetypes = { "bash", "sh", "zsh" },
         settings = {
             bashIde = {
                 globPattern = "*@(.sh|.inc|.bash|.command)",
