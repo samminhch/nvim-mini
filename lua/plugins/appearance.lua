@@ -1,4 +1,4 @@
-local now, later, add = MiniDeps.now, MiniDeps.later, MiniDeps.add
+local now, add = MiniDeps.now, MiniDeps.add
 
 now(function() add({ source = "stevearc/dressing.nvim" }) end)
 
