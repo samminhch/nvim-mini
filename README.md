@@ -16,8 +16,8 @@ Make sure to back up these files:
 
 | Linux / MacOS              | Windows                                 |
 | -------------------------- | --------------------------------------- |
-| `$HOME/.config/nvim/`      | `$Env.HomePath\AppData\Local\nvim`      |
-| `$HOME/.local/share/nvim/` | `$Env.HomePath\AppData\Local\nvim-data` |
+| `$HOME/.config/nvim/`      | `$Env:LocalAppData\nvim`      |
+| `$HOME/.local/share/nvim/` | `$Env:LocalAppData\nvim-data` |
 | `$HOME/.cache/nvim/`       |                                         |
 
 ...and then clone the repository into the respective folders
