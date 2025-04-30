@@ -2,7 +2,6 @@ local now = MiniDeps.now
 
 ---@type KeyMap[]
 local keymaps = {}
-local servers = require("plugins.mason").servers
 
 -- ╒═══════════╕
 -- │ LSP Setup │
@@ -32,15 +31,12 @@ now(function()
     -- ╒═════════════════════════════╕
     -- │ Configuring / Enabling LSPs │
     -- ╘═════════════════════════════╛
-    for server, config in pairs(servers) do
-        if not config.ignore_config then
-            -- if server == "jdtls" then
-            --     vim.print(config)
-            -- end
-            vim.lsp.config[server] = type(config) == "table" and config or config()
-            vim.lsp.enable(server)
-        end
+    local servers = {}
+    for _, name in pairs(vim.api.nvim_get_runtime_file("lsp/*.lua", true)) do
+        local server_name = vim.fn.fnamemodify(name, ":t:r")
+        table.insert(servers, server_name)
     end
+    vim.lsp.enable(servers)
 end)
 
 return { keymaps = keymaps }
