@@ -40,6 +40,13 @@ vim.filetype.add({
     callback = function(event) vim.bo[event.buf].commentstring = "# %s" end,
 })
 
+vim.filetype.add({
+    pattern = {
+        ["compose.*%.ya?ml"] = "yaml.docker-compose",
+        ["docker%-compose.*%.ya?ml"] = "yaml.docker-compose",
+    },
+})
+
 -- ╒═══════════════════════════════════╕
 -- │Load the rest of the configuration │
 -- ╘═══════════════════════════════════╛
