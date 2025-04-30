@@ -57,8 +57,8 @@ require("mini.deps").now(function()
     -- ╒════════════════╕
     -- │ Spell Checking │
     -- ╘════════════════╛
-    vim.opt.spell = true -- Enable spell checking
-    vim.opt.spelllang = "en_us" -- Set spell-checking language
+    -- vim.opt.spell = true -- Enable spell checking
+    -- vim.opt.spelllang = "en_us" -- Set spell-checking language
 
     -- ╒═══════╕
     -- │ Folds │
