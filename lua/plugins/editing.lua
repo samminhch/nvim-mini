@@ -16,7 +16,7 @@ now(function()
         monitor = "main",
         -- Perform action after every checkout
         hooks = {
-            post_checkout = function() vim.cmd.TSUpdate() end,
+            post_checkout = function() vim.cmd("TSUpdate") end,
         },
     })
 end)
@@ -24,7 +24,6 @@ end)
 now(function()
     add({
         source = "stevearc/conform.nvim",
-        checkout = "v8.3.0",
     })
 
     -- Assign keymaps
@@ -103,7 +102,7 @@ now(function()
         {
             mode = "n",
             binding = "<leader>fe",
-            action = not require("mini.files").close() and require("mini.files").open,
+            action = not require("mini.files").close() and require("mini.files").open or "",
             options = { desc = "[F]ile [E]xplorer" },
         },
     }
@@ -197,9 +196,9 @@ later(function()
     end
 end)
 
--- ╒═════════════════════════╕
--- │ `nvim-treesitter` Setup │
--- ╘═════════════════════════╛
+-- ╒═══════════════════════╕
+-- │ nvim-treesitter Setup │
+-- ╘═══════════════════════╛
 later(
     function()
         require("nvim-treesitter.configs").setup({
@@ -244,10 +243,9 @@ later(
     end
 )
 
--- ╒══════════════════════╕
--- │ `conform.nvim` setup │
--- ╘══════════════════════╛
-local shiftwidth = vim.api.nvim_get_option_value("shiftwidth", {})
+-- ╒════════════════════╕
+-- │ conform.nvim setup │
+-- ╘════════════════════╛
 local formatters = require("plugins.mason").formatters
 later(function()
     require("conform").setup({
