@@ -1,4 +1,5 @@
 local now = MiniDeps.now
+local utils = require("utils.base")
 
 ---@type KeyMap[]
 local keymaps = {}
@@ -37,12 +38,17 @@ now(function()
         root_markers = { ".git" },
         capabilities = require("mini.completion").get_lsp_capabilities(),
     })
+
+    local ignore_servers = { "basedpyright" }
+
     local servers = {}
     for _, name in pairs(vim.api.nvim_get_runtime_file("lsp/*.lua", true)) do
         local server_name = vim.fn.fnamemodify(name, ":t:r")
-        table.insert(servers, server_name)
+        if not utils.array_contains(ignore_servers, server_name) then
+            table.insert(servers, server_name)
+            vim.lsp.enable(server_name)
+        end
     end
-    vim.lsp.enable(servers)
 end)
 
 return { keymaps = keymaps }

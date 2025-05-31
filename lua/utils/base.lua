@@ -32,4 +32,14 @@ function base.merge_arrays(...)
     return merged
 end
 
+function base.array_contains(array, key)
+    for _, value in ipairs(array) do
+        if value == key then
+            return true
+        end
+    end
+
+    return false
+end
+
 return base
