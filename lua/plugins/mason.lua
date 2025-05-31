@@ -9,8 +9,8 @@ MiniDeps.now(function()
     MiniDeps.add({
         source = "WhoIsSethDaniel/mason-tool-installer.nvim",
         depends = {
-            "williamboman/mason.nvim",
-            "williamboman/mason-lspconfig.nvim",
+            "mason-org/mason.nvim",
+            "mason-org/mason-lspconfig.nvim",
         },
     })
 
