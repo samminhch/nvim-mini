@@ -1,3 +1,4 @@
+---@type vim.lsp.Config
 return {
     before_init = function()
         -- Setup lazydev before configuring LSPs
@@ -18,6 +19,5 @@ return {
         "stylua.toml",
         "selene.toml",
         "selene.yml",
-        ".git",
     },
 }

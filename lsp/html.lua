@@ -1,3 +1,4 @@
+---@type vim.lsp.Config
 return {
     cmd = { "vscode-html-language-server", "--stdio" },
     filetypes = { "html", "templ" },
@@ -9,5 +10,5 @@ return {
         },
         provideFormatter = true,
     },
-    root_markers = { "package.json", ".git" },
+    root_markers = { "package.json" },
 }

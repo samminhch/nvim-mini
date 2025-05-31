@@ -1,3 +1,4 @@
+---@type vim.lsp.Config
 return {
     cmd = { "harper-ls", "--stdio" },
     filetypes = {
@@ -25,7 +26,6 @@ return {
         "php",
         "dart",
     },
-    root_markers = { ".git" },
     settings = {
         linters = {
             SentenceCapitalization = false,

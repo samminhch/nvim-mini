@@ -1,4 +1,5 @@
 local env = {
+    ---@diagnostic disable-next-line: undefined-field
     sysname = vim.loop.os_uname().sysname,
     xdg_cache_home = os.getenv("XDG_CACHE_HOME"),
     nvim = {
@@ -9,10 +10,10 @@ local env = {
 local cache_dir = env.cache_home and env.cache_home or vim.fn.expand("~/.cache")
 
 local jdtls_exec = env.sysname == "Linux" and "/usr/bin/jdtls" or "jdtls"
-local jdtls_dir = env.sysname == "LINUX" and "/usr/share/java/jdtls" or env.nvim.mason_data .. "jdtls"
-local jdtls_config_dir = jdtls_dir .. (env.sysname == "Linux" and "config_linux/" or "config/")
+local jdtls_config_dir = env.xdg_cache_home .. "/jdtls"
 local jdtls_workspace_dir = cache_dir .. "/workspace"
 
+---@type vim.lsp.Config
 return {
     cmd = {
         jdtls_exec,

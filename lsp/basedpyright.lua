@@ -1,3 +1,4 @@
+---@type vim.lsp.Config
 return {
     cmd = { "basedpyright-langserver", "--stdio" },
     filetypes = { "python" },
@@ -8,6 +9,5 @@ return {
         "requirements.txt",
         "Pipfile",
         "pyrightconfig.json",
-        ".git",
     },
 }

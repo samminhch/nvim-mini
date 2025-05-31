@@ -31,6 +31,12 @@ now(function()
     -- ╒═════════════════════════════╕
     -- │ Configuring / Enabling LSPs │
     -- ╘═════════════════════════════╛
+
+    -- Define a default configuration
+    vim.lsp.config("*", {
+        root_markers = { ".git" },
+        capabilities = require("mini.completion").get_lsp_capabilities(),
+    })
     local servers = {}
     for _, name in pairs(vim.api.nvim_get_runtime_file("lsp/*.lua", true)) do
         local server_name = vim.fn.fnamemodify(name, ":t:r")
