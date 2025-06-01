@@ -3,7 +3,6 @@ require("mini.deps").now(function()
     -- │Appearance│
     -- ╘══════════╛
     vim.opt.number = true
-    vim.opt.relativenumber = true
     vim.opt.signcolumn = "yes"
     vim.opt.cursorline = true
     vim.opt.termguicolors = vim.fn.has("termguicolors") == 1 -- Conditional termguicolors support

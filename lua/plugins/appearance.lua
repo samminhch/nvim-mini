@@ -6,8 +6,16 @@ now(function() add({ source = "stevearc/dressing.nvim" }) end)
 -- │ Setting Colorscheme │
 -- ╘═════════════════════╛
 now(function()
-    add({ source = "sainnhe/everforest" })
-    vim.cmd.colorscheme("everforest")
+    add({ source = "everviolet/nvim", name = "evergarden" })
+
+    ---@diagnostic disable-next-line: missing-fields
+    require("evergarden").setup({
+        theme = {
+            variant = "winter",
+        },
+    })
+
+    vim.cmd.colorscheme("evergarden")
 end)
 
 -- ╒══════════════════════════════╕
