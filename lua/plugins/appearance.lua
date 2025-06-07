@@ -6,6 +6,7 @@ now(function() add({ source = "stevearc/dressing.nvim" }) end)
 -- │ Setting Colorscheme │
 -- ╘═════════════════════╛
 now(function()
+    add({ source = "sainnhe/everforest" })
     add({ source = "everviolet/nvim", name = "evergarden" })
 
     ---@diagnostic disable-next-line: missing-fields
