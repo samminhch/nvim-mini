@@ -34,7 +34,6 @@ require("mini.deps").setup({ path = { package = path_package } })
 -- ╒═════════════════╕
 -- │Custom filetypes │
 -- ╘═════════════════╛
--- Make a hyprlang filetype
 vim.filetype.add({
     pattern = { [".*/hypr.*%.conf"] = "hyprlang" },
     callback = function(event) vim.bo[event.buf].commentstring = "# %s" end,

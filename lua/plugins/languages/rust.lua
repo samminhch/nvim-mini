@@ -8,7 +8,7 @@ MiniDeps.later(function()
         lsp = {
             enabled = true,
             on_attach = function(client, bufnr)
-                -- the same on_attach function as for your other LSPs
+                -- The same on_attach function as for your other LSPs
             end,
             actions = true,
             completion = true,

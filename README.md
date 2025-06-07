@@ -22,21 +22,23 @@ Make sure to back up these files:
 
 ...and then clone the repository into the respective folders
 
-## Plugin List (15)
+## Plugin List (17)
 
 ```txt
 ┌──(`mini.nvim` Suite)  # Used throughout config
 ├──(Appearance)
+│  ├──[everviolet/nvim]
 │  ├──[sainnhe/everforest]
 │  └──[stevearc/dressing.nvim]
 ├──(General Text Editing)
 │  ├──[mbbill/undotree]
 │  ├──[nvim-treesitter/nvim-treesitter]
+│  ├──[nvim-treesitter/nvim-treesitter-context]
 │  └──[stevearc/conform.nvim]
 ├──(Mason)
 │  └──[WhoIsSethDaniel/mason-tool-installer.nvim]
-│     ├──(williamboman/mason.nvim)
-│     └──(williamboman/mason-lspconfig.nvim)
+│     ├──(mason-org/mason.nvim)
+│     └──(mason-org/mason-lspconfig.nvim)
 ├──(Language-Specific)
 │  ├──[MeanderingProgrammer/render-markdown.nvim]
 │  ├──[chomosuke/typst-preview.nvim]
