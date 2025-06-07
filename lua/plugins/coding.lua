@@ -1,4 +1,4 @@
-local now = MiniDeps.now
+local now, add = MiniDeps.now, MiniDeps.add
 local utils = require("utils.base")
 
 ---@type KeyMap[]
@@ -8,6 +8,8 @@ local keymaps = {}
 -- │ LSP Setup │
 -- ╘═══════════╛
 now(function()
+    add({ source = "neovim/nvim-lspconfig" })
+
     -- ╒═════════════╕
     -- │ Diagnostics │
     -- ╘═════════════╛
@@ -35,11 +37,10 @@ now(function()
 
     -- Define a default configuration
     vim.lsp.config("*", {
-        root_markers = { ".git" },
         capabilities = require("mini.completion").get_lsp_capabilities(),
     })
 
-    local ignore_servers = { "basedpyright" }
+    local ignore_servers = { "basedpyright", "omnisharp_mono" }
 
     local servers = {}
     for _, name in pairs(vim.api.nvim_get_runtime_file("lsp/*.lua", true)) do

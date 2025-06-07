@@ -1,5 +1,1 @@
----@type vim.lsp.Config
-return {
-    cmd = { "taplo", "lsp", "stdio" },
-    filetypes = { "toml" },
-}
+-- Implementation by `neovim/nvim-lspconfig.nvim`

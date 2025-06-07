@@ -1,14 +1,7 @@
 ---@type vim.lsp.Config
 return {
-    cmd = { "vscode-html-language-server", "--stdio" },
-    filetypes = { "html", "templ" },
+    -- Formatting handled by `conform.nvim`
     init_options = {
-        configurationSection = { "html", "css", "javascript" },
-        embeddedLanguages = {
-            css = true,
-            javascript = true,
-        },
-        provideFormatter = true,
+        provideFormatter = false,
     },
-    root_markers = { "package.json" },
 }

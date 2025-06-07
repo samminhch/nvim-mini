@@ -1,5 +1,1 @@
----@type vim.lsp.Config
-return {
-    cmd = { "hyprls", "--stdio" },
-    filetypes = { "hyprlang" },
-}
+-- Implementation by `neovim/nvim-lspconfig.nvim`
