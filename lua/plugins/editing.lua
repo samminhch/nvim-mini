@@ -10,14 +10,17 @@ local keymaps = {}
 now(function()
     add({
         source = "nvim-treesitter/nvim-treesitter",
-        -- Use "master" while monitoring updates in "main"
-
-        checkout = "master",
+        checkout = "main",
         monitor = "main",
         -- Perform action after every checkout
         hooks = {
             post_checkout = function() vim.cmd("TSUpdate") end,
         },
+    })
+
+    add({
+        source = "nvim-treesitter/nvim-treesitter-context",
+        depends = { "nvim-treesitter/nvim-treesitter" },
     })
 end)
 
@@ -196,58 +199,53 @@ later(function()
     end
 end)
 
--- ╒═══════════════════════╕
--- │ nvim-treesitter Setup │
--- ╘═══════════════════════╛
-later(
-    function()
-        require("nvim-treesitter.configs").setup({
-            highlight = { enable = true },
-            auto_install = true,
-            indent = { enable = true, disable = { "python" } },
-            context_commentstring = { enable = true, enable_autocmd = false },
-            ensure_installed = {
-                "arduino",
-                "c",
-                "cpp",
-                "lua",
-                "markdown",
-                "markdown_inline",
-                "regex",
-                "typst",
-                "vimdoc",
-                "vim",
+-- ╒═════════════════════════╕
+-- │ `nvim-treesitter` Setup │
+-- ╘═════════════════════════╛
+later(function()
+    require("nvim-treesitter.configs").setup({
+        highlight = { enable = true },
+        auto_install = true,
+        indent = { enable = true, disable = { "python" } },
+        ensure_installed = {
+            "lua",
+            "markdown",
+            "markdown_inline",
+            "regex",
+            "vimdoc",
+            "vim",
+        },
+        incremental_selection = {
+            enable = true,
+            keymaps = {
+                init_selection = "<C-space>",
+                node_incremental = "<C-space>",
+                scope_incremental = false,
+                node_decremental = "<bs>",
             },
-            incremental_selection = {
+        },
+        textobjects = {
+            move = {
                 enable = true,
-                keymaps = {
-                    init_selection = "<C-space>",
-                    node_incremental = "<C-space>",
-                    scope_incremental = false,
-                    node_decremental = "<bs>",
-                },
+                goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer" },
+                goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer" },
+                goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer" },
+                goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@class.outer" },
             },
-            textobjects = {
-                move = {
-                    enable = true,
-                    goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer" },
-                    goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer" },
-                    goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer" },
-                    goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@class.outer" },
-                },
-            },
-            modules = {},
-            sync_install = true,
-            ignore_install = {},
-        })
-    end
-)
+        },
+        modules = {},
+        sync_install = true,
+        ignore_install = {},
+    })
+    require("treesitter-context").setup({})
+end)
 
 -- ╒════════════════════╕
 -- │ conform.nvim setup │
 -- ╘════════════════════╛
 local formatters = require("plugins.mason").formatters
 later(function()
+    vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
     require("conform").setup({
         formatters_by_ft = {
             arduino = { "clang_format" },
