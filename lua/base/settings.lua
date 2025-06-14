@@ -65,6 +65,4 @@ require("mini.deps").now(function()
     vim.opt.foldcolumn = "auto" -- Dynamic fold column width
     vim.opt.foldlevel = 20 -- Open folds up to level 20 by default
     vim.opt.foldmethod = "expr" -- Use expression-based folding
-    vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()" -- Use Treesitter for folding
-    vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()" -- Customize fold text display
 end)
