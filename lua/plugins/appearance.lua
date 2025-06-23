@@ -13,6 +13,7 @@ now(function()
     require("evergarden").setup({
         theme = {
             variant = "winter",
+            accent = "aqua",
         },
     })
 

@@ -20,11 +20,38 @@ end)
 
 -- Pre-configuring language servers & Debuggers
 
-local servers = {}
-for _, name in pairs(vim.api.nvim_get_runtime_file("lsp/*.lua", true)) do
-    local server_name = vim.fn.fnamemodify(name, ":t:r")
-    table.insert(servers, server_name)
-end
+--- @type table<string, vim.lsp.Config>
+local servers = {
+    air = {},
+    bashls = {},
+    clangd = {
+        flags = {
+            debounce_text_changes = 20,
+            exit_timeout = false,
+        },
+    },
+    cssls = { init_options = { provideFormatter = false } },
+    docker_compose_language_service = {},
+    dockerls = {},
+    eslint = {},
+    harper_ls = {
+        settings = {
+            linters = {
+                SentenceCapitalization = false,
+                SpellCheck = false,
+            },
+        },
+    },
+    html = { init_options = { provideFormatter = false } },
+    jdtls = {},
+    jsonls = { init_options = { provideFormatter = false } },
+    lua_ls = {},
+    marksman = {},
+    pyrefly = {},
+    rust_analyzer = {},
+    taplo = {},
+    tinymist = {},
+}
 
 local formatters = {
     black = {},
@@ -48,7 +75,7 @@ local formatters = {
 }
 
 -- A string[] of packages to install
-local packages = utils.merge_arrays(servers, vim.tbl_keys(formatters))
+local packages = utils.merge_arrays(vim.tbl_keys(servers), vim.tbl_keys(formatters))
 local ignore_packages = { "rustfmt" } -- Don't install these packages
 
 for idx = 1, #packages do

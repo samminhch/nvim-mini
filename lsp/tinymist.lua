@@ -1,1 +1,0 @@
--- Implementation by `nvim-lspconfig.nvim`

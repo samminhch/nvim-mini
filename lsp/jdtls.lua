@@ -1,1 +1,0 @@
--- Implementation by `neovim/nvim-lspconfig.nvim` and `nvim-java/nvim-java`
