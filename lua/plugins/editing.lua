@@ -202,6 +202,7 @@ end)
 -- ╒═════════════════════════╕
 -- │ `nvim-treesitter` Setup │
 -- ╘═════════════════════════╛
+-- [TODO] Update the tree-sitter config soon
 later(function()
     require("nvim-treesitter.configs").setup({
         highlight = { enable = true },
